@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Untukmu</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap');
+
+  :root{
+    --plum: #3a2438;
+    --wine: #6b2d3c;
+    --rose: #c96b7e;
+    --blush: #f3d9d4;
+    --cream: #fbf3ee;
+    --gold: #b98a4e;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: linear-gradient(160deg, var(--plum) 0%, var(--wine) 55%, #8a3b4a 100%);
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  .sky{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .petal{
+    position: absolute;
+    top: -5%;
+    width: 14px;
+    height: 14px;
+    background: var(--rose);
+    border-radius: 0 60% 0 60%;
+    opacity: 0.55;
+    animation: fall linear infinite;
+  }
+  @keyframes fall{
+    to{ transform: translateY(110vh) rotate(400deg); }
+  }
+
+  .stage{
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+  }
+  .stage.active{ display: flex; }
+
+  .card{
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+  }
+
+  .eyebrow-mark{
+    font-family: 'Caveat', cursive;
+    font-size: 1.4rem;
+    color: var(--blush);
+    opacity: 0.85;
+    margin: 0 0 6px;
+  }
+
+  h1{
+    font-weight: 600;
+    font-size: 2.6rem;
+    line-height: 1.15;
+    margin: 0 0 18px;
+    color: var(--cream);
+  }
+
+  p.lead{
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--blush);
+    margin: 0 0 28px;
+  }
+
+  input[type="password"], textarea, input[type="text"]{
+    width: 100%;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(251, 243, 238, 0.35);
+    background: rgba(251, 243, 238, 0.08);
+    color: var(--cream);
+    outline: none;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+  input::placeholder, textarea::placeholder{ color: rgba(251,243,238,0.55); }
+  input:focus, textarea:focus{
+    border-color: var(--rose);
+    background: rgba(251, 243, 238, 0.13);
+  }
+  textarea{ min-height: 150px; resize: vertical; line-height: 1.5; }
+
+  .btn{
+    display: inline-block;
+    margin-top: 22px;
+    padding: 13px 34px;
+    background: var(--rose);
+    color: var(--plum);
+    border: none;
+    border-radius: 999px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .btn:hover{ background: var(--gold); transform: translateY(-2px); }
+  .btn:active{ transform: translateY(0); }
+  .btn[disabled]{ opacity: 0.5; cursor: not-allowed; }
+
+  .btn-ghost{
+    background: transparent;
+    color: var(--blush);
+    border: 1px solid rgba(251,243,238,0.4);
+  }
+  .btn-ghost:hover{ background: rgba(251,243,238,0.1); color: var(--cream); }
+
+  .error-msg{
+    color: #f0b8b8;
+    font-size: 0.95rem;
+    margin-top: 12px;
+    min-height: 1.2em;
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem;
+  }
+
+  .signature{
+    font-family: 'Caveat', cursive;
+    font-size: 1.6rem;
+    color: var(--gold);
+    margin-top: 6px;
+  }
+
+  .divider{
+    width: 60px;
+    height: 1px;
+    background: rgba(251,243,238,0.4);
+    margin: 26px auto;
+  }
+
+  .whisper{
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    color: var(--rose);
+    line-height: 1.5;
+    margin-top: 18px;
+  }
+
+  .reveal-box{
+    text-align: left;
+    background: rgba(251,243,238,0.06);
+    border: 1px solid rgba(251,243,238,0.18);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-top: 22px;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--cream);
+    display: none;
+  }
+
+  .row{
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .final-word{
+    font-family: 'Caveat', cursive;
+    font-size: 1.8rem;
+    color: var(--blush);
+    margin-top: 30px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .petal{ animation: none; display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sky" id="sky"></div>
+
+<!-- STAGE 1: KATA SANDI -->
+<section class="stage active" id="stage-password">
+  <div class="card">
+    <p class="eyebrow-mark">untuk seseorang yang paling berarti</p>
+    <h1>Halaman ini terkunci,<br>hanya untukmu.</h1>
+    <p class="lead">Masukkan kata sandi yang kamu tahu untuk membukanya.</p>
+    <input type="password" id="passInput" placeholder="Ketik kata sandi di sini..." autocomplete="off">
+    <div class="error-msg" id="passError"></div>
+    <div class="row">
+      <button class="btn" id="unlockBtn">Buka</button>
+    </div>
+  </div>
+</section>
+
+<!-- STAGE 2: MAAF -->
+<section class="stage" id="stage-sorry">
+  <div class="card">
+    <p class="eyebrow-mark">sebelum kata lain,</p>
+    <h1>Maafkan aku.</h1>
+    <p class="lead">maafin aku yang egois ini ya</p>
+    <p class="whisper">kata kamu mau tau kan sesakit apa, jadi ini aku ceritain</p>
+    <div class="row">
+      <button class="btn" id="toStoryBtn">Lanjut</button>
+    </div>
+  </div>
+</section>
+
+<!-- STAGE 3: CERITA / PENJELASAN -->
+<section class="stage" id="stage-story">
+  <div class="card">
+    <p class="eyebrow-mark">apa yang sebenarnya terjadi</p>
+    <h1>jadi gini ra</h1>
+    <p class="lead">tapi setelah baca ini kita tetep sama2 ya, jangan dimasukin hati hehe.</p>
+
+    <div class="reveal-box" id="storyText">
+     jadi tuh ya aku kan abis kena mental sama to ku fisika ku tau sendiri berapa, abis tu aku ngarep kan bakal ada yang buat mood aku balik eh malem nya kamu ngomong gitu.
+     disitu aku ga marah bgt masalahnya kamu bener2 anjir lah, aku tau ra aku ga pinter fisika dan sekarang aku lagi coba ngejar ketertinggalan malah kamu bilang gitu dan aku juga ga ganteng kan? jujur aja.
+     nah disitu aku sakit hati aku gamau sekolah gamau ngapa2in,karena kan aku bilang aku semanagat sekolah karena apa, kalo gaada kamu yaudah aku jadi males. terus ada satu momen dimana aku udah pusing bgt abis tuh nyari loginan tapi ga dapet(tujuannya bilang makasih ke kamu)
+     tapi gadapet nah abis tu ada satu momen yang buat aku langsung mikir gajadi, adalah momennyal abis tu kan aku ga login lagi nguatin diri aku akhirnya keputusan ku bulat buat lanjut.
+     aku minta kamu mau ngehina aku segimana pun gapapa tapi jan sampe buat aku cemburu sama perlakuan mu sama sifat mu mau yang kamu suka hewan pun kalo dia lebih baik aku bakal cemburu ra inget ya.
+    </div>
+
+    <div class="row">
+      <button class="btn btn-ghost" id="showStoryBtn">Baca penjelasannya</button>
+    </div>
+
+    <div class="divider"></div>
+    <div class="row">
+      <button class="btn" id="toQuestionBtn">Lanjut</button>
+    </div>
+  </div>
+</section>
+
+<!-- STAGE 4: PERTANYAAN -->
+<section class="stage" id="stage-question">
+  <div class="card">
+    <p class="eyebrow-mark">beberapa hal yang pengen aku tanyain</p>
+    <h1>mau ga buat jaga hati mungil ku?,<br>dan tetep terus sama aku?</h1>
+    <p class="lead">aku pengen tau pas aku kek gitu kamu kayak gimana, ngerti kan?</p>
+       <input type="text" id="answerInput" placeholder="kirim jawabannya di ig ya ">
+    <div class="row">
+      <button class="btn" id="sendAnswerBtn">lanjut</button>
+    </div>
+  </div>
+</section>
+    </div>
+  </div>
+</section>
+
+<!-- STAGE 5: PENUTUP -->
+<section class="stage" id="stage-final">
+  <div class="card">
+    <p class="eyebrow-mark">terima kasih sudah baca sampai sini</p>
+    <h1 id="finalTitle">Apapun jawabanmu,</h1>
+    <p class="lead" id="finalLead">terima kasih sudah mau mendengarkanku sampai akhir. </p>
+    <div class="divider"></div>
+    <p class="final-word">Aku sayang kamu, lebih dari apapun.</p>
+    <p class="signature">— dari serigala kesayangan iara, untukmu</p>
+  </div>
+</section>
+
+<script>
+ 
+  const PASSWORD = "412";
+
+  const stages = {
+    password: document.getElementById('stage-password'),
+    sorry: document.getElementById('stage-sorry'),
+    story: document.getElementById('stage-story'),
+    question: document.getElementById('stage-question'),
+    final: document.getElementById('stage-final'),
+  };
+
+  function goTo(name){
+    Object.values(stages).forEach(s => s.classList.remove('active'));
+    stages[name].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Stage 1 -> 2
+  const passInput = document.getElementById('passInput');
+  const passError = document.getElementById('passError');
+  document.getElementById('unlockBtn').addEventListener('click', () => {
+    if(passInput.value.trim().toLowerCase() === PASSWORD.toLowerCase()){
+      passError.textContent = '';
+      goTo('sorry');
+    } else {
+      passError.textContent = 'Coba lagi, sepertinya belum tepat.';
+    }
+  });
+  passInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') document.getElementById('unlockBtn').click();
+  });
+
+  // Stage 2 -> 3
+  document.getElementById('toStoryBtn').addEventListener('click', () => goTo('story'));
+
+  // Reveal story box
+  document.getElementById('showStoryBtn').addEventListener('click', (e) => {
+    const box = document.getElementById('storyText');
+    box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    e.target.textContent = box.style.display === 'block' ? 'Sembunyikan' : 'Baca penjelasannya';
+  });
+
+  // Stage 3 -> 4
+  document.getElementById('toQuestionBtn').addEventListener('click', () => goTo('question'));
+
+  // Stage 4 -> 5
+  document.getElementById('sendAnswerBtn').addEventListener('click', () => {
+    const answer = document.getElementById('answerInput').value.trim().toLowerCase();
+    const finalTitle = document.getElementById('finalTitle');
+    const finalLead = document.getElementById('finalLead');
+
+    if(answer.includes('ya') || answer.includes('mau') || answer.includes('iya')){
+      finalTitle.textContent = 'Terima kasih sudah memaafkanku.';
+      finalLead.textContent = 'Aku janji akan lebih baik, dan lebih hati-hati menjaga perasaanmu setelah ini.';
+    } else if(answer.length === 0){
+      finalTitle.textContent = 'makasih banyak';
+      finalLead.textContent = '';
+    } else {
+      finalTitle.textContent = 'Aku mengerti perasaanmu.';
+      finalLead.textContent = 'Aku akan terus berusaha, sampai kamu percaya lagi sepenuhnya padaku.';
+    }
+    goTo('final');
+  });
+
+  // Falling petals background
+  const sky = document.getElementById('sky');
+  const petalCount = 18;
+  for(let i = 0; i < petalCount; i++){
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (8 + Math.random() * 10) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.opacity = 0.25 + Math.random() * 0.4;
+    p.style.width = p.style.height = (8 + Math.random() * 10) + 'px';
+    sky.appendChild(p);
+  }
+</script>
+
+</body>
+</html>
